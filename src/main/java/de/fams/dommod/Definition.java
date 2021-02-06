@@ -18,7 +18,7 @@ public class Definition {
 	}
 	
 	private RefType getType() {
-		return RefType.REFTYPE_BY_NAME.get(commands.get(0).name);
+		return StaticTables.REFTYPE_BY_NAME.get(commands.get(0).name);
 	}
 	
 	private Optional<Integer> getId() {

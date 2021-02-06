@@ -19,13 +19,13 @@ public class Parser {
 		public ParsingException(String message) {
 			super(String.format("Line %d on %s: %s", lineNo, fileName.getName(), message));
 		}
-		
+
 		public ParsingException(Exception e) {
 			super(String.format("Line %d on %s: %s", lineNo, fileName.getName(), e.getMessage()));
 		}
-		
+
 	}
-	
+
 	private final File fileName;
 	private final BufferedReader reader;
 	private int lineNo = 1;
@@ -35,7 +35,7 @@ public class Parser {
 	private boolean isEof() {
 		return lastChar == '\0';
 	}
-	
+
 	public Parser(String fName) throws ParsingException {
 		this.fileName = new File(fName);
 		try {
@@ -61,28 +61,28 @@ public class Parser {
 			}
 		}
 	}
-	
+
 	public String readPrefixComment() throws ParsingException {
 		StringBuffer comment = new StringBuffer();
 		while (!isEof() && (Character.isWhitespace(lastChar) || lastChar == '-')) {
 			comment.append(lastChar);
-			if (lastChar == '\n') lineNo++;
+			if (lastChar == '\n')
+				lineNo++;
 			readChar();
 			if (lastChar == '-') {
 				comment.append(lastChar);
 				while (!isEof() && (lastChar != '\n')) {
-					comment.append(lastChar);
-					readChar();
+					shift(comment);
 				}
-			}	
+			}
 		}
 		return comment.toString();
 	}
-	
+
 	public boolean lastIsAlphaNum() {
 		return Character.isAlphabetic(lastChar) || Character.isDigit(lastChar) || lastChar == '_';
 	}
-	
+
 	public String readCommand() throws ParsingException {
 		if (lastChar != '#') {
 			Print.info("%d", Character.getNumericValue(lastChar));
@@ -94,12 +94,11 @@ public class Parser {
 		}
 		StringBuffer name = new StringBuffer();
 		while (!isEof() && lastIsAlphaNum()) {
-			name.append(lastChar);
-			readChar();
+			shift(name);
 		}
 		return name.toString();
 	}
-	
+
 	public Command readLine() throws ParsingException {
 		String prefixWhitespace = readPrefixComment();
 		if (isEof()) {
@@ -110,60 +109,72 @@ public class Parser {
 		List<Argument> arguments = readArguments();
 		return new Command(prefixWhitespace, command, arguments, lastComment);
 	}
-	
+
 	private List<Argument> readArguments() throws ParsingException {
 		lastComment = null;
 		List<Argument> result = Lists.newArrayList();
 		skipWhitespace();
-		while(!isEof() && lastChar != '\n') {
+		while (!isEof() && lastChar != '\n') {
 			StringBuffer buf = new StringBuffer();
 			switch (lastChar) {
 			case '-':
-				buf.append('-');
-				readChar();
+				shift(buf);
 				if (lastChar == '-') {
 					while (!isEof() && lastChar != '\n') {
-						buf.append(lastChar);
-						readChar();
+						shift(buf);
 					}
 					lastComment = buf.toString();
 				} else if (Character.isDigit(lastChar)) {
 					while (Character.isDigit(lastChar) || lastChar == '.') {
-						buf.append(lastChar);
-						readChar();
-					}					
-					result.add(new Argument(Type.NUMBER, buf.toString()));					
+						shift(buf);
+					}
+					result.add(new Argument(Type.NUMBER, buf.toString()));
 				} else {
-					throw new ParsingException("Error parsing arguments");					
+					throw new ParsingException("Error parsing arguments");
+				}
+				break;
+			case '+':
+				shift(buf);
+				if (Character.isDigit(lastChar)) {
+					while (Character.isDigit(lastChar) || lastChar == '.') {
+						shift(buf);
+					}
+					result.add(new Argument(Type.NUMBER, buf.toString()));
+				} else {
+					throw new ParsingException("Error parsing arguments");
 				}
 				break;
 			case '"':
-				readChar();
+				readChar(); // Skipping opening "
 				while (!isEof() && lastChar != '"') {
-					if (lastChar == '\n') lineNo++;
-					buf.append(lastChar);
-					readChar();
+					if (lastChar == '\n')
+						lineNo++;
+					shift(buf);
 				}
 				if (isEof()) {
 					throw new ParsingException("Unclosed String");
 				}
 				result.add(new Argument(Type.STRING, buf.toString()));
-				readChar();
+				readChar(); // Skipping closing "
 				break;
 			default:
 				if (Character.isDigit(lastChar)) {
 					while (Character.isDigit(lastChar) || lastChar == '.') {
-						buf.append(lastChar);
-						readChar();
-					}					
+						shift(buf);
+					}
 					result.add(new Argument(Type.NUMBER, buf.toString()));
 				} else {
-					throw new ParsingException("Error parsing arguments");					
+					throw new ParsingException("Error parsing arguments");
 				}
 			}
 			skipWhitespace();
-		}	
+		}
 		return result;
+	}
+
+	private void shift(StringBuffer buf) throws ParsingException {
+		buf.append(lastChar);
+		readChar();
 	}
 
 	private void skipWhitespace() throws ParsingException {
@@ -183,5 +194,5 @@ public class Parser {
 		}
 		return new DmFile(commands, lastComment);
 	}
-	
+
 }

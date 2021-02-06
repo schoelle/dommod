@@ -22,7 +22,7 @@ public class Command {
 	}
 	
 	public Reference reference() {
-		RefType type = RefType.REFTYPE_BY_NAME.get(name);
+		RefType type = StaticTables.REFTYPE_BY_NAME.get(name);
 		if (type == null) {
 			return null;
 		}

@@ -22,7 +22,7 @@ public class DmFile {
 		Iterator<Command> cmdIterator = commands.iterator();		
 		while (cmdIterator.hasNext()) {
 			Command cmd = cmdIterator.next();
-			RefType startType = RefType.STARTCMD_FOR_NAME.get(cmd.name);
+			RefType startType = StaticTables.STARTCMD_FOR_NAME.get(cmd.name);
 			if (startType == null) {
 				outsideCommands.add(cmd);
 			} else {
