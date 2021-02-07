@@ -9,12 +9,14 @@ import de.fams.dommod.Argument.Type;
  */
 public class Command {
 
+	public int line;
 	public String prefixComment;
 	public String name;
 	public List<Argument> arguments;
 	public String lineComment;
 	
-	public Command(String prefixComment, String name, List<Argument> arguments, String lineComment) {
+	public Command(int line, String prefixComment, String name, List<Argument> arguments, String lineComment) {
+		this.line = line;
 		this.prefixComment = prefixComment;
 		this.name = name;
 		this.arguments = arguments;
@@ -38,7 +40,7 @@ public class Command {
 	
 	@Override
 	public String toString() {
-		return String.format("Command(%s,%s)", name, arguments);
+		return String.format("Command(Line: %d, #%s, %s)", line, name, arguments);
 	}
 	
 }

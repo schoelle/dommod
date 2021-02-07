@@ -85,7 +85,6 @@ public class Parser {
 
 	public String readCommand() throws ParsingException {
 		if (lastChar != '#') {
-			Print.info("%d", Character.getNumericValue(lastChar));
 			throw new ParsingException("# expected");
 		}
 		readChar();
@@ -106,8 +105,9 @@ public class Parser {
 			return null;
 		}
 		String command = readCommand();
+		int cmdLine = lineNo;
 		List<Argument> arguments = readArguments();
-		return new Command(prefixWhitespace, command, arguments, lastComment);
+		return new Command(cmdLine, prefixWhitespace, command, arguments, lastComment);
 	}
 
 	private List<Argument> readArguments() throws ParsingException {
@@ -184,7 +184,7 @@ public class Parser {
 	}
 
 	public DmFile parse() throws ParsingException {
-		readChar(); // Preload 'lastCharacter'
+		readChar(); // "Preload" first character into lastChar
 		List<Command> commands = Lists.newArrayList();
 		while (!isEof()) {
 			Command cmd = readLine();
