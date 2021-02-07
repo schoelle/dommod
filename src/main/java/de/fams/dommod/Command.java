@@ -2,8 +2,6 @@ package de.fams.dommod;
 
 import java.util.List;
 
-import de.fams.dommod.Argument.Type;
-
 /**
  * A single instruction (#keyword) in a .dm file
  */
@@ -14,6 +12,7 @@ public class Command {
 	public String name;
 	public List<Argument> arguments;
 	public String lineComment;
+	public DmFile dmFile;
 	
 	public Command(int line, String prefixComment, String name, List<Argument> arguments, String lineComment) {
 		this.line = line;
@@ -23,19 +22,19 @@ public class Command {
 		this.lineComment = lineComment;
 	}
 	
+	public void setDmFile(DmFile dmFile) {
+		this.dmFile = dmFile;
+	}
+	
 	public Reference reference() {
-		RefType type = StaticTables.REFTYPE_BY_NAME.get(name);
+		EntityType type = StaticTables.REFTYPE_BY_NAME.get(name);
 		if (type == null) {
 			return null;
 		}
 		if (arguments.isEmpty()) {
 			return null;
 		}
-		Argument arg = arguments.get(0);
-		if (arg.type == Type.NUMBER) {
-			return new Reference(type, Integer.valueOf(arg.value), null);
-		}
-		return new Reference(type, null, arg.value);
+		return new Reference(type, dmFile, this, arguments.get(0));
 	}
 	
 	@Override

@@ -10,19 +10,33 @@ public class DmFile {
 	public final List<Command> commands;
 	public final String tailComment;
 	public final List<Command> outsideCommands = Lists.newArrayList();
-	public final List<Definition> definitions = Lists.newArrayList();
-	
+
+	private List<Definition> definitions = null;
+
 	public DmFile(List<Command> commands, String tailComment) {
 		this.commands = commands;
 		this.tailComment = tailComment;
 		buildDefinitions();
 	}
 
-	public void buildDefinitions() {
+	public List<Definition> getDefinitions() {
+		if (definitions == null) {
+			buildDefinitions();
+		}
+		return definitions;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("DmFile(commands=%s,definitions=%s,outsideCommands=%s)", commands.size(), definitions.size(), outsideCommands.size());
+	}
+
+	private void buildDefinitions() {
+		definitions = Lists.newArrayList();
 		Iterator<Command> cmdIterator = commands.iterator();		
 		while (cmdIterator.hasNext()) {
 			Command cmd = cmdIterator.next();
-			RefType startType = StaticTables.STARTCMD_FOR_NAME.get(cmd.name);
+			EntityType startType = StaticTables.STARTCMD_FOR_NAME.get(cmd.name);
 			if (startType == null) {
 				outsideCommands.add(cmd);
 			} else {
@@ -38,10 +52,5 @@ public class DmFile {
 				definitions.add(new Definition(defCommands));
 			}	
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("DmFile(commands=%s,definitions=%s,outsideCommands=%s)", commands.size(), definitions.size(), outsideCommands.size());
 	}
 }

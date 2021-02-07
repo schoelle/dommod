@@ -17,11 +17,11 @@ public class Definition {
 		this.commands = commands;
 	}
 	
-	private RefType getType() {
+	private EntityType getType() {
 		return StaticTables.REFTYPE_BY_NAME.get(commands.get(0).name);
 	}
 	
-	private Optional<Integer> getId() {
+	public Optional<Integer> getId() {
 		Command cmd = commands.get(0);
 		if (cmd.arguments.isEmpty()) {
 			return Optional.empty();
@@ -33,7 +33,7 @@ public class Definition {
 		return Optional.empty();
 	}
 
-	private String getName() {
+	public String getName() {
 		for (Command cmd: commands) {
 			if (cmd.name.equals("name")) {
 				return cmd.arguments.get(0).value;

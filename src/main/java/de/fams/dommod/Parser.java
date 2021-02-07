@@ -192,7 +192,9 @@ public class Parser {
 				commands.add(cmd);
 			}
 		}
-		return new DmFile(commands, lastComment);
+		DmFile dmFile = new DmFile(commands, lastComment);
+		commands.forEach(c -> c.setDmFile(dmFile));
+		return dmFile;
 	}
 
 }
