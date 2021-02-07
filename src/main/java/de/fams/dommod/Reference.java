@@ -28,14 +28,24 @@ public class Reference {
 	
 	private List<Definition> lastMatch;
 	
-	public RefStatus status() {
-		List<Definition> defs = dmFile.getDefinitions();
+	public boolean matches(Definition def) {
 		if (argument.type == Type.NUMBER) {
 			int nr = Integer.valueOf(argument.value);
-			lastMatch = defs.stream().filter(d -> d.getId().isPresent() && nr == d.getId().get()).collect(Collectors.toList());
+			return def.getType() == type && def.getId().isPresent() && nr == def.getId().get(); 
+		} else {
+			String name = argument.value.toLowerCase();
+			return def.getType() == type && def.getName() != null && name.equals(def.getName().toLowerCase());
+		}
+	}
+	
+	public RefStatus status() {
+		List<Definition> defs = dmFile.getDefinitions();
+		lastMatch = defs.stream().filter(d -> matches(d)).collect(Collectors.toList());
+		if (argument.type == Type.NUMBER) {
 			if (!lastMatch.isEmpty()) {
 				return RefStatus.INTERNAL;
 			}
+			int nr = Integer.valueOf(argument.value);
 			if (nr < type.minId && nr > type.maxId) {
 				return RefStatus.INVALID;
 			}
@@ -44,10 +54,8 @@ public class Reference {
 			}
 			return RefStatus.EXTERNAL;
 		} else {
-			String name = argument.value.toLowerCase();
-			lastMatch = defs.stream().filter(d -> d.getName() != null && name.equals(d.getName().toLowerCase())).collect(Collectors.toList());
 			if (lastMatch.isEmpty()) {
-				if (InspectorData.isBuiltIn(type, name)) {
+				if (InspectorData.isBuiltIn(type, argument.value)) {
 					return RefStatus.BUILT_IN;
 				}
 				return RefStatus.NOT_FOUND;

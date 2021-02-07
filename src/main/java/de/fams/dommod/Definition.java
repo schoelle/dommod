@@ -3,6 +3,8 @@ package de.fams.dommod;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.common.collect.Lists;
+
 import de.fams.dommod.Argument.Type;
 
 /**
@@ -17,7 +19,7 @@ public class Definition {
 		this.commands = commands;
 	}
 	
-	private EntityType getType() {
+	public EntityType getType() {
 		return StaticTables.REFTYPE_BY_NAME.get(commands.get(0).name);
 	}
 	
@@ -49,5 +51,16 @@ public class Definition {
 			return getType().toString() + ": " + getName();
 		}
 		return getType().toString() + "(" + id.get() + "): " + getName();
+	}
+
+	public List<Reference> getReferences() {
+		List<Reference> result = Lists.newArrayList();
+		for (Command cmd: commands) {
+			Reference ref = cmd.reference();
+			if (ref != null) {
+				result.add(ref);
+			}
+		}
+		return result;
 	}
 }

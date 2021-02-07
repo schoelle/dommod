@@ -10,6 +10,7 @@ public class TaskRegistry {
 	
 	static {
 		TASK_TABLE.put("check", new Check());
+		TASK_TABLE.put("dot", new Dot());
 	}
 	
 }
