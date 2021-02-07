@@ -32,21 +32,24 @@ public class Reference {
 		List<Definition> defs = dmFile.getDefinitions();
 		if (argument.type == Type.NUMBER) {
 			int nr = Integer.valueOf(argument.value);
+			lastMatch = defs.stream().filter(d -> d.getId().isPresent() && nr == d.getId().get()).collect(Collectors.toList());
+			if (!lastMatch.isEmpty()) {
+				return RefStatus.INTERNAL;
+			}
 			if (nr < type.minId && nr > type.maxId) {
 				return RefStatus.INVALID;
 			}
 			if (nr < type.minModId) {
 				return RefStatus.BUILT_IN;
 			}
-			lastMatch = defs.stream().filter(d -> d.getId().isPresent() && nr == d.getId().get()).collect(Collectors.toList());
-			if (lastMatch.isEmpty()) {
-				return RefStatus.EXTERNAL;
-			}
-			return RefStatus.INTERNAL;
+			return RefStatus.EXTERNAL;
 		} else {
-			String name = argument.value;
-			lastMatch = defs.stream().filter(d -> name.equals(d.getName())).collect(Collectors.toList());
+			String name = argument.value.toLowerCase();
+			lastMatch = defs.stream().filter(d -> d.getName() != null && name.equals(d.getName().toLowerCase())).collect(Collectors.toList());
 			if (lastMatch.isEmpty()) {
+				if (InspectorData.isBuiltIn(type, name)) {
+					return RefStatus.BUILT_IN;
+				}
 				return RefStatus.NOT_FOUND;
 			}
 			if (lastMatch.size() > 1) {
@@ -56,7 +59,7 @@ public class Reference {
 		}
 	}
 	
-	public List<Definition> getTarget() {
+	public List<Definition> getTargets() {
 		switch(status()) {
 		case BUILT_IN:
 		case NOT_FOUND:

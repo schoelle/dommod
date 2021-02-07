@@ -3,7 +3,6 @@ package de.fams.dommod.tasks;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -51,7 +50,7 @@ public class Check implements Task {
 			if (d.getId().isPresent()) {
 				int id = d.getId().get();
 				if (idsUsed.contains(id)) {
-					errors.add(String.format("Duplicate definition of ID %d", id));
+					warnings.add(String.format("Duplicate definition of ID %d", id));
 				} else {
 					idsUsed.add(id);
 				}
@@ -65,7 +64,7 @@ public class Check implements Task {
 					errors.add(status.getBadText()+ ": " + ref.toString());
 				} else {
 					if (status == RefStatus.EXTERNAL) {
-						warnings.add("External reference detected:" + ref.toString());
+						warnings.add("External reference detected: " + ref.toString());
 					}
 				}				
 			}
