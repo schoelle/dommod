@@ -100,7 +100,9 @@ public class Main {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		return new DmFile(commands, lastComment);
+		DmFile result = new DmFile(commands, lastComment);
+		commands.forEach(c -> c.setDmFile(result));
+		return result;
 	}
 
 	private static DmFile readDmFile(String dmFileName) {
