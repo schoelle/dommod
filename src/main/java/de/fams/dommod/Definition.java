@@ -35,6 +35,18 @@ public class Definition {
 		return Optional.empty();
 	}
 
+	public Reference getSelfReference() {
+		Command cmd = commands.get(0);
+		if (cmd.arguments.isEmpty()) {
+			return null;
+		}
+		Argument arg = cmd.arguments.get(0);
+		if (arg.type != Type.NUMBER) {
+			return null;
+		}
+		return new Reference(getType(), cmd.dmFile, commands.get(0), arg);
+	}
+
 	public String getName() {
 		for (Command cmd: commands) {
 			if (cmd.name.equals("name")) {

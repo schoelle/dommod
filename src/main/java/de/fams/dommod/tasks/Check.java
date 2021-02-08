@@ -45,12 +45,12 @@ public class Check implements Task {
 	public void check(DmFile mod) {
 		errors.clear();
 		warnings.clear();
-		Set<Integer> idsUsed = Sets.newHashSet();
+		Set<String> idsUsed = Sets.newHashSet();
 		for (Definition d: mod.getDefinitions()) {
 			if (d.getId().isPresent()) {
-				int id = d.getId().get();
+				String id = d.getSelfReference().toString();
 				if (idsUsed.contains(id)) {
-					warnings.add(String.format("Duplicate definition of ID %d", id));
+					warnings.add(String.format("Duplicate definition of %s", id));
 				} else {
 					idsUsed.add(id);
 				}
@@ -66,7 +66,7 @@ public class Check implements Task {
 					if (status == RefStatus.EXTERNAL) {
 						warnings.add("External reference detected: " + ref.toString());
 					}
-				}				
+				}
 			}
 		}
 	}
