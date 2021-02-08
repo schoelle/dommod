@@ -11,6 +11,8 @@ public class TaskRegistry {
 	static {
 		TASK_TABLE.put("check", new Check());
 		TASK_TABLE.put("dot", new Dot());
+		TASK_TABLE.put("output", new Output());
+		TASK_TABLE.put("json", new ToJson());
 	}
 	
 }

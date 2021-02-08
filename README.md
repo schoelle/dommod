@@ -23,6 +23,18 @@ Optional argument of .dot filename (otherwise stdout will be used)
 
 Produces a .dot file that can be used by [GraphViz](https://graphviz.org/) and similar tools to draw a dependency graph.
 
+## output
+
+Optional argument of .dm filename (otherwise stdout will be used)
+
+Output the read-in module in .dm format, useful for converting from JSON to DM.
+
+## json
+
+Optional argument of .json filename (otherwise stdout will be used)
+
+Output the read-in module in .json format, useful for converting from DM to JSON.
+
 # Changelog
 
 ## 2021-02-07

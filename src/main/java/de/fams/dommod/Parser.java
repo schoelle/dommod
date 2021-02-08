@@ -70,7 +70,6 @@ public class Parser {
 				lineNo++;
 			readChar();
 			if (lastChar == '-') {
-				comment.append(lastChar);
 				while (!isEof() && (lastChar != '\n')) {
 					shift(comment);
 				}
@@ -168,6 +167,9 @@ public class Parser {
 				}
 			}
 			skipWhitespace();
+		}
+		if (!isEof() && lastChar == '\n') {
+			readChar();
 		}
 		return result;
 	}
