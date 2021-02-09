@@ -1,9 +1,12 @@
 package de.fams.dommod.tasks;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import de.fams.dommod.Command;
@@ -45,14 +48,15 @@ public class Check implements Task {
 	public void check(DmFile mod) {
 		errors.clear();
 		warnings.clear();
-		Set<String> idsUsed = Sets.newHashSet();
+		Map<String, Integer> idsUsed = Maps.newHashMap();
 		for (Definition d: mod.getDefinitions()) {
 			if (d.getId().isPresent()) {
 				String id = d.getSelfReference().toString();
-				if (idsUsed.contains(id)) {
-					warnings.add(String.format("Duplicate definition of %s", id));
+				if (idsUsed.containsKey(id)) {
+					warnings.add(String.format("Duplicate definition of %s (line %d vs %d)", id,
+							idsUsed.get(id), d.commands.get(0).line));
 				} else {
-					idsUsed.add(id);
+					idsUsed.put(id, d.commands.get(0).line);
 				}
 			}	
 		}

@@ -47,6 +47,9 @@ public class Parser {
 
 	public void readChar() throws ParsingException {
 		int c;
+		if (lastChar == '\n') {
+			lineNo++;
+		}
 		try {
 			c = (char) reader.read();
 		} catch (IOException e) {
@@ -66,8 +69,6 @@ public class Parser {
 		StringBuffer comment = new StringBuffer();
 		while (!isEof() && (Character.isWhitespace(lastChar) || lastChar == '-')) {
 			comment.append(lastChar);
-			if (lastChar == '\n')
-				lineNo++;
 			readChar();
 			if (lastChar == '-') {
 				while (!isEof() && (lastChar != '\n')) {
@@ -146,8 +147,6 @@ public class Parser {
 			case '"':
 				readChar(); // Skipping opening "
 				while (!isEof() && lastChar != '"') {
-					if (lastChar == '\n')
-						lineNo++;
 					shift(buf);
 				}
 				if (isEof()) {
