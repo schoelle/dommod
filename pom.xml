@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.fams</groupId>
 	<artifactId>dommod</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 	<name>Dommod Tool</name>
 	<description>A swiss army knife for working with Dominions 5 mod file</description>

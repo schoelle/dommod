@@ -37,10 +37,6 @@ Output the read-in module in .json format, useful for converting from DM to JSON
 
 # Changelog
 
-## 2021-02-07
+## 2021-02-09 - Version 0.1.0 
 
-Added check and dot tasks.
-
-## 2021-02-06 
-
-Initial upload. Working first version of the parser, though there are still a many hole that need filling.
+First release, includes the tasks: check, dot, output, json
