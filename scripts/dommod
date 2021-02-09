@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+JAR=JARNAME
+
+if [ -z $JAVA_HOME ]; then
+    $JAVA_HOME/bin/java -jar $JAR $*
+else
+    $JAVA_HOME/bin/java -jar $JAR $*
+fi
