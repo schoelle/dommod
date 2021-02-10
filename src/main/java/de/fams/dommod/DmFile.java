@@ -2,7 +2,9 @@ package de.fams.dommod;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 public class DmFile {
@@ -16,8 +18,7 @@ public class DmFile {
 	public DmFile(List<Command> commands, String tailComment) {
 		this.commands = commands;
 		this.tailComment = tailComment;
-		buildDefinitions();
-	}
+ 	}
 
 	public List<Definition> getDefinitions() {
 		if (definitions == null) {
@@ -25,13 +26,14 @@ public class DmFile {
 		}
 		return definitions;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("DmFile(commands=%s,definitions=%s,outsideCommands=%s)", commands.size(), definitions.size(), outsideCommands.size());
 	}
 
 	private void buildDefinitions() {
+		Preconditions.checkState(definitions == null);
 		definitions = Lists.newArrayList();
 		Iterator<Command> cmdIterator = commands.iterator();		
 		while (cmdIterator.hasNext()) {
@@ -49,8 +51,51 @@ public class DmFile {
 					cmd = cmdIterator.next();
 					defCommands.add(cmd);
 				}
-				definitions.add(new Definition(defCommands));
+				Definition def = new Definition(defCommands);
+				definitions.add(def);
+				for (Command c: defCommands) {
+					c.setDefinition(def);
+				}
 			}	
 		}
 	}
+
+	public List<Command> getGlobalCommands() {
+		return commands.stream().filter(c -> c.definition == null).collect(Collectors.toList());
+	}
+
+	public String getModInfo(String name) {
+		String lName = name.toLowerCase();
+		Command cmd = commands.stream().filter(c -> c.definition == null && c.name.toLowerCase().equals(lName)).findAny().orElse(null);
+		if (cmd == null || cmd.arguments.isEmpty()) {
+			return null;
+		}
+		return cmd.arguments.get(0).value;
+	}
+
+	public String getModName() {
+		return getModInfo("modname");
+	}
+
+	public String getDescription() {
+		return getModInfo("description");
+	}
+
+	public String getIcon() {
+		return getModInfo("icon");
+	}
+
+	public String getVersion() {
+		return getModInfo("version");
+	}
+
+	public String getDomVersion() {
+		return getModInfo("domversion");
+	}
+
+	public boolean oldNationsAreDisabled() {
+		return commands.stream().anyMatch(c -> c.name.toLowerCase().equals("disableoldnations"));
+	}
+
+
 }

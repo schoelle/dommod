@@ -1,5 +1,7 @@
 package de.fams.dommod;
 
+import com.google.common.base.Preconditions;
+
 import java.util.List;
 
 /**
@@ -12,7 +14,8 @@ public class Command {
 	public String name;
 	public List<Argument> arguments;
 	public String lineComment;
-	public DmFile dmFile;
+	public DmFile dmFile = null;
+	public Definition definition = null;
 	
 	public Command(int line, String prefixComment, String name, List<Argument> arguments, String lineComment) {
 		this.line = line;
@@ -23,9 +26,15 @@ public class Command {
 	}
 	
 	public void setDmFile(DmFile dmFile) {
+		Preconditions.checkState(this.dmFile == null);
 		this.dmFile = dmFile;
 	}
-	
+
+	public void setDefinition(Definition definition)  {
+		Preconditions.checkState(this.definition == null);
+		this.definition = definition;
+	}
+
 	public Reference reference() {
 		EntityType type = StaticTables.REFTYPE_BY_NAME.get(name);
 		if (type == null) {

@@ -13,6 +13,7 @@ public class TaskRegistry {
 		TASK_TABLE.put("dot", new Dot());
 		TASK_TABLE.put("output", new Output());
 		TASK_TABLE.put("json", new ToJson());
+		TASK_TABLE.put("info", new Info());
 	}
 	
 }
