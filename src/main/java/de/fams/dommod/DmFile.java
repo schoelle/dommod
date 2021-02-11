@@ -1,10 +1,10 @@
 package de.fams.dommod;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 public class DmFile {
@@ -22,7 +22,7 @@ public class DmFile {
 
 	public List<Definition> getDefinitions() {
 		if (definitions == null) {
-			buildDefinitions();
+			rebuildDefinitions();
 		}
 		return definitions;
 	}
@@ -32,8 +32,7 @@ public class DmFile {
 		return String.format("DmFile(commands=%s,definitions=%s,outsideCommands=%s)", commands.size(), definitions.size(), outsideCommands.size());
 	}
 
-	private void buildDefinitions() {
-		Preconditions.checkState(definitions == null);
+	public void rebuildDefinitions() {
 		definitions = Lists.newArrayList();
 		Iterator<Command> cmdIterator = commands.iterator();		
 		while (cmdIterator.hasNext()) {
@@ -64,9 +63,13 @@ public class DmFile {
 		return commands.stream().filter(c -> c.definition == null).collect(Collectors.toList());
 	}
 
+	public Command getGlobalCommand(String name) {
+		return commands.stream().filter(c -> c.definition == null && c.name.toLowerCase().equals(name.toLowerCase())).findAny().orElse(null);
+	}
+
+
 	public String getModInfo(String name) {
-		String lName = name.toLowerCase();
-		Command cmd = commands.stream().filter(c -> c.definition == null && c.name.toLowerCase().equals(lName)).findAny().orElse(null);
+		Command cmd = getGlobalCommand(name);
 		if (cmd == null || cmd.arguments.isEmpty()) {
 			return null;
 		}
@@ -97,5 +100,9 @@ public class DmFile {
 		return commands.stream().anyMatch(c -> c.name.toLowerCase().equals("disableoldnations"));
 	}
 
+	public void removeCommands(Collection<Command> cmds) {
+		commands.removeAll(cmds);
+		rebuildDefinitions();
+	}
 
 }

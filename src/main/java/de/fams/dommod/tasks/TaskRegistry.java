@@ -14,6 +14,6 @@ public class TaskRegistry {
 		TASK_TABLE.put("output", new Output());
 		TASK_TABLE.put("json", new ToJson());
 		TASK_TABLE.put("info", new Info());
+		TASK_TABLE.put("slicenation", new SliceNation());
 	}
-	
 }

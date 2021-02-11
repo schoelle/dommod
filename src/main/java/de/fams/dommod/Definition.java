@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.google.common.collect.Lists;
 
 import de.fams.dommod.Argument.Type;
+import org.apache.commons.text.WordUtils;
 
 /**
  * Definition of an entity in a .dm file, normally started by '#selectTYPE' or '#newTYPE'
@@ -59,10 +60,14 @@ public class Definition {
 	@Override
 	public String toString() {
 		Optional<Integer> id = getId();
-		if (id.isEmpty()) {
-			return getType().toString() + ": " + getName();
+		String name = getName();
+		if (name == null) {
+			name = "???";
 		}
-		return getType().toString() + "(" + id.get() + "): " + getName();
+		if (id.isEmpty()) {
+			return getType().word() + ": " + name.trim();
+		}
+		return getType().word() + "(" + id.get() + "): " + name.trim();
 	}
 
 	public List<Reference> getReferences() {
@@ -75,4 +80,5 @@ public class Definition {
 		}
 		return result;
 	}
+
 }

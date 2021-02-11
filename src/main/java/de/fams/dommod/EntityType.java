@@ -1,5 +1,7 @@
 package de.fams.dommod;
 
+import org.apache.commons.text.WordUtils;
+
 //
 public enum EntityType {
 	
@@ -25,4 +27,8 @@ public enum EntityType {
 		this.minModId = minMod;
 		this.maxId = max;
 	}
+
+    public String word() {
+		return WordUtils.capitalizeFully(this.toString());
+    }
 }
