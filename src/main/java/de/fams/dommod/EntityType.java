@@ -15,7 +15,8 @@ public enum EntityType {
 	SITE(0, 1500, 1999), 
 	NATION(0, 120, 249), 
 	MERCENARY(0, 100, 200), // Artifical numbers - no limits are mentioned in the mod manual
-	POPTYPE(0, 100, 200); // Artifical numbers - no limits are mentioned in the mod manual
+	POPTYPE(0, 100, 200), // Artifical numbers - no limits are mentioned in the mod manual
+	EVENT(0, 100, 200); // Artifical numbers - no limits are mentioned in the mod manual
 	//@formatter:on
 	
 	public final int minId;

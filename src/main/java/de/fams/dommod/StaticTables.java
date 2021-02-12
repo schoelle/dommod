@@ -203,6 +203,9 @@ public class StaticTables {
 
 	public static final List<String> POPTYPE_CMDS = Lists.newArrayList(
 			"selectpoptype");
+
+	public static final List<String> EVENT_CMDS = Lists.newArrayList(
+			"newevent");
 	//@formatter:on
 
 	public static final Map<String, EntityType> REFTYPE_BY_NAME = Maps.newHashMap();
@@ -218,6 +221,7 @@ public class StaticTables {
 		NATION_CMDS.stream().forEach(e -> REFTYPE_BY_NAME.put(e, NATION));
 		MERCENARY_CMDS.stream().forEach(e -> REFTYPE_BY_NAME.put(e, MERCENARY));
 		POPTYPE_CMDS.stream().forEach(e -> REFTYPE_BY_NAME.put(e, POPTYPE));
+		EVENT_CMDS.stream().forEach(e -> REFTYPE_BY_NAME.put(e, EVENT));
 	}
 
 	public static final Map<String, EntityType> STARTCMD_FOR_NAME = Maps.newHashMap();
@@ -240,6 +244,7 @@ public class StaticTables {
 		STARTCMD_FOR_NAME.put("newnation", NATION);
 		STARTCMD_FOR_NAME.put("newmerc", MERCENARY);
 		STARTCMD_FOR_NAME.put("selectpoptype", POPTYPE);
+		STARTCMD_FOR_NAME.put("newevent", EVENT);
 	}
 
 }

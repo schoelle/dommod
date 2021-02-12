@@ -7,11 +7,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 
 import de.fams.dommod.Argument.Type;
 
 public class Parser {
+
+	public static final ObjectMapper MAPPER = new ObjectMapper();
 
 	public class ParsingException extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -31,12 +37,14 @@ public class Parser {
 	private int lineNo = 1;
 	private char lastChar;
 	private String lastComment;
+	private boolean parsingJson;
 
 	private boolean isEof() {
 		return lastChar == '\0';
 	}
 
 	public Parser(String fName) throws ParsingException {
+		parsingJson = fName.toLowerCase().endsWith(".json");
 		this.fileName = new File(fName);
 		try {
 			this.reader = new BufferedReader(new FileReader(fName));
@@ -124,24 +132,11 @@ public class Parser {
 						shift(buf);
 					}
 					lastComment = buf.toString();
-				} else if (Character.isDigit(lastChar)) {
-					while (Character.isDigit(lastChar) || lastChar == '.') {
+				} else {
+					while (!isEof() && lastChar != '-' && lastChar != ' ' && lastChar != '\t' && lastChar != '\n') {
 						shift(buf);
 					}
 					result.add(new Argument(Type.NUMBER, buf.toString()));
-				} else {
-					throw new ParsingException("Error parsing arguments");
-				}
-				break;
-			case '+':
-				shift(buf);
-				if (Character.isDigit(lastChar)) {
-					while (Character.isDigit(lastChar) || lastChar == '.') {
-						shift(buf);
-					}
-					result.add(new Argument(Type.NUMBER, buf.toString()));
-				} else {
-					throw new ParsingException("Error parsing arguments");
 				}
 				break;
 			case '"':
@@ -156,14 +151,10 @@ public class Parser {
 				readChar(); // Skipping closing "
 				break;
 			default:
-				if (Character.isDigit(lastChar)) {
-					while (Character.isDigit(lastChar) || lastChar == '.') {
-						shift(buf);
-					}
-					result.add(new Argument(Type.NUMBER, buf.toString()));
-				} else {
-					throw new ParsingException("Error parsing arguments");
+				while (!isEof() && lastChar != '-' && lastChar != ' ' && lastChar != '\t' && lastChar != '\n') {
+					shift(buf);
 				}
+				result.add(new Argument(Type.NUMBER, buf.toString()));
 			}
 			skipWhitespace();
 		}
@@ -185,6 +176,14 @@ public class Parser {
 	}
 
 	public DmFile parse() throws ParsingException {
+		if (parsingJson) {
+			return parseJson();
+		} else {
+			return parseDm();
+		}
+	}
+
+	public DmFile parseDm() throws ParsingException {
 		readChar(); // "Preload" first character into lastChar
 		List<Command> commands = Lists.newArrayList();
 		while (!isEof()) {
@@ -198,4 +197,55 @@ public class Parser {
 		return dmFile;
 	}
 
+	private Command parseJsonCommand(JsonNode node) {
+		String name = node.get("name").textValue();
+		JsonNode prefixNode = node.get("prefix");
+		String prefix = prefixNode == null ? null : prefixNode.textValue();
+		JsonNode commentNode = node.get("comment");
+		String comment = commentNode == null ? null : commentNode.textValue();
+		List<Argument> arguments = Lists.newArrayList();
+		int argCount = 1;
+		JsonNode numNode = node.get(String.format("arg%dnum", argCount));
+		JsonNode strNode = node.get(String.format("arg%dstr", argCount));
+		while (numNode != null || strNode != null) {
+			if (numNode != null) {
+				arguments.add(new Argument(Argument.Type.NUMBER, numNode.textValue()));
+			} else {
+				arguments.add(new Argument(Argument.Type.STRING, strNode.textValue()));
+			}
+			argCount++;
+			numNode = node.get(String.format("arg%dnum", argCount));
+			strNode = node.get(String.format("arg%dstr", argCount));
+		}
+		return new Command(1, prefix, name, arguments, comment); // we lose the line numbers
+	}
+
+	private DmFile parseJson() throws ParsingException {
+		List<Command> commands = Lists.newArrayList();
+		String lastComment = "";
+		try {
+			ArrayNode data = (ArrayNode) MAPPER.readTree(reader);
+			for (JsonNode node: data) {
+				ObjectNode oNode = (ObjectNode) node;
+				if (oNode.has("tailComment")) {
+					lastComment = oNode.get("tailComment").textValue();
+					continue;
+				}
+				Command cmd = parseJsonCommand(oNode);
+				commands.add(cmd);
+				if (oNode.has("content")) {
+					ArrayNode content = (ArrayNode) oNode.get("content");
+					for (JsonNode cNode: content) {
+						Command ccmd = parseJsonCommand(cNode);
+						commands.add(ccmd);
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new ParsingException(e);
+		}
+		DmFile result = new DmFile(commands, lastComment);
+		commands.forEach(c -> c.setDmFile(result));
+		return result;
+	}
 }

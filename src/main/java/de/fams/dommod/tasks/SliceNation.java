@@ -2,6 +2,7 @@ package de.fams.dommod.tasks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
+import com.google.common.collect.Sets;
 import de.fams.dommod.*;
 
 import javax.sql.CommonDataSource;
@@ -9,6 +10,7 @@ import java.sql.Ref;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SliceNation implements Task {
@@ -25,9 +27,21 @@ public class SliceNation implements Task {
         int nationId = Integer.valueOf(arguments.get(0));
         Definition nation = findNation(nationId);
         if (nation == null) {
-            System.out.println("Unable to find specified nation.");
+            System.out.println("Unable to find specified nation: " + nationId);
             return;
         }
+        List<Command> commandToRemove = Lists.newArrayList();
+        for (Command cmd: mod.commands) {
+            if (StaticTables.NATION_CMDS.contains(cmd.name) && !StaticTables.STARTCMD_FOR_NAME.containsKey(cmd.name)) {
+                Reference ref = cmd.reference();
+                if (ref != null && !ref.getTargets().contains(nation)) {
+                    commandToRemove.add(cmd);
+                }
+            }
+        }
+        mod.removeCommands(commandToRemove);
+        mod.rebuildDefinitions();
+        nation = findNation(nationId);
         String nationName = nation.getName();
         System.out.println(String.format("Extracting nation %d: %s", nation.getId().get(), nationName));
         List<Definition> spells = findSpells(nationId, nationName);
@@ -40,7 +54,7 @@ public class SliceNation implements Task {
 
         List<Definition> needed = dfs(required);
         List<Definition> notNeeded = mod.getDefinitions().stream().filter(d -> !needed.contains(d)).collect(Collectors.toList());
-        List<Command> commandToRemove = Lists.newArrayList();
+        commandToRemove.clear();
         for (Definition def: notNeeded) {
             System.out.println("Removing: " + def.toString());
             commandToRemove.addAll(def.commands);
