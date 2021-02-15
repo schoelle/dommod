@@ -40,7 +40,6 @@ public class SliceNation implements Task {
             }
         }
         mod.removeCommands(commandToRemove);
-        mod.rebuildDefinitions();
         nation = findNation(nationId);
         String nationName = nation.getName();
         System.out.println(String.format("Extracting nation %d: %s", nation.getId().get(), nationName));
@@ -53,7 +52,7 @@ public class SliceNation implements Task {
         required.addAll(spells);
 
         List<Definition> needed = dfs(required);
-        List<Definition> notNeeded = mod.getDefinitions().stream().filter(d -> !needed.contains(d)).collect(Collectors.toList());
+        List<Definition> notNeeded = mod.definitions.stream().filter(d -> !needed.contains(d)).collect(Collectors.toList());
         commandToRemove.clear();
         for (Definition def: notNeeded) {
             System.out.println("Removing: " + def.toString());
@@ -64,7 +63,7 @@ public class SliceNation implements Task {
             commandToRemove.add(cmd);
         }
         mod.removeCommands(commandToRemove);
-        for (Definition n: mod.getDefinitions()) {
+        for (Definition n: mod.definitions) {
             System.out.println("Keeping: " + n.toString());
         }
 
@@ -98,7 +97,7 @@ public class SliceNation implements Task {
     }
 
     private List<Definition> findSpells(int nationId, String nationName) {
-        return mod.getDefinitions().stream().filter(d -> {
+        return mod.definitions.stream().filter(d -> {
                     if (d.getType() != EntityType.SPELL) {
                         return false;
                     }
@@ -120,7 +119,7 @@ public class SliceNation implements Task {
     }
 
     private Definition findNation(int id) {
-        for (Definition def : mod.getDefinitions()) {
+        for (Definition def : mod.definitions) {
             if (def.getType() == EntityType.NATION && def.getId().isPresent() && def.getId().get() == id) {
                 return def;
             }
@@ -136,6 +135,6 @@ public class SliceNation implements Task {
 
     @Override
     public String description() {
-        return "Slices a nation from a mod into a new mod.";
+        return "Slices a nation from a mod into a new mod. Warning: removes all events.";
     }
 }

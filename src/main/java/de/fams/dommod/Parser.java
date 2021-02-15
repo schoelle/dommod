@@ -176,11 +176,14 @@ public class Parser {
 	}
 
 	public DmFile parse() throws ParsingException {
+		DmFile result;
 		if (parsingJson) {
-			return parseJson();
+			result = parseJson();
 		} else {
-			return parseDm();
+			result = parseDm();
 		}
+		result.rebuildDefinitions();
+		return result;
 	}
 
 	public DmFile parseDm() throws ParsingException {

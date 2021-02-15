@@ -39,7 +39,7 @@ public class Reference {
 	}
 	
 	public RefStatus status() {
-		List<Definition> defs = dmFile.getDefinitions();
+		List<Definition> defs = dmFile.definitions;
 		lastMatch = defs.stream().filter(d -> matches(d)).collect(Collectors.toList());
 		if (argument.type == Type.NUMBER) {
 			if (!lastMatch.isEmpty()) {

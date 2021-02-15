@@ -29,7 +29,7 @@ public class Dot implements Task {
 		output.write("digraph modgraph {\n");
 		output.write("  node [shape=record];\n");
 		output.write("  overlap=false;\n");
-		for (Definition def: mod.getDefinitions()) {
+		for (Definition def: mod.definitions) {
 			String label;
 			if (def.getId().isEmpty() || def.getName() == null) {
 				label = nodeName(def);
@@ -38,7 +38,7 @@ public class Dot implements Task {
 			}
 			output.write(String.format("  \"%s\" [label=\"%s\"];\n", nodeName(def), label));
 		}
-		for (Definition def: mod.getDefinitions()) {
+		for (Definition def: mod.definitions) {
 			for (Reference ref : def.getReferences()) {
 				for (Definition target: ref.getTargets()) {
 					if (target != def) {

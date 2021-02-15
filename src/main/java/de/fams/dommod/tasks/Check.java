@@ -49,7 +49,7 @@ public class Check implements Task {
 		errors.clear();
 		warnings.clear();
 		Map<String, Integer> idsUsed = Maps.newHashMap();
-		for (Definition d: mod.getDefinitions()) {
+		for (Definition d: mod.definitions) {
 			if (d.getId().isPresent()) {
 				String id = d.getSelfReference().toString();
 				if (idsUsed.containsKey(id)) {

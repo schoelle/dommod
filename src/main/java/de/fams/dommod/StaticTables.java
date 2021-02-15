@@ -2,9 +2,11 @@ package de.fams.dommod;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import static de.fams.dommod.EntityType.*;
 
@@ -14,21 +16,21 @@ import static de.fams.dommod.EntityType.*;
 public class StaticTables {
 
 	//@formatter:off
-	public static final List<String> WEAPON_CMDS = Lists.newArrayList(
-			"selectweapon", 
-			"copyweapon", 
+	public static final Set<String> WEAPON_CMDS = Sets.newHashSet(
+			"selectweapon",
+			"copyweapon",
 			"newweapon",
-			"secondaryeffect", 
-			"secondaryeffectalways", 
+			"secondaryeffect",
+			"secondaryeffectalways",
 			"weapon");
 
-	public static final List<String> ARMOR_CMDS = Lists.newArrayList(
+	public static final Set<String> ARMOR_CMDS = Sets.newHashSet(
 			"selectarmor", 
 			"newarmor", 
 			"copyarmor", 
 			"armor");
 
-	public static final List<String> MONSTER_CMDS = Lists.newArrayList(
+	public static final Set<String> MONSTER_CMDS = Sets.newHashSet(
 			"selectmonster", 
 			"newmonster", 
 			"copystats",
@@ -159,13 +161,64 @@ public class StaticTables {
 			"delgod", 
 			"cheapgod20", 
 			"cheapgod40", 
-			"guardspirit");
+			"guardspirit",
+			"req_godismnr",
+			"req_monster",
+			"req_2monsters",
+			"req_5monsters",
+			"req_nomonster",
+			"req_mnr",
+			"req_nomnr",
+			"req_deadmnr",
+			"req_targmnr",
+			"req_targnomnr",
+			"assassin",
+			"assowner",
+			"stealthcom",
+			"2com",
+			"4com",
+			"5com",
+			"1unit",
+			"1d3units",
+			"2d3units",
+			"3d3units",
+			"4d3units",
+			"1d6units",
+			"2d6units",
+			"3d6units",
+			"4d6units",
+			"5d6units",
+			"6d6units",
+			"7d6units",
+			"8d6units",
+			"9d6units",
+			"10d6units",
+			"11d6units",
+			"12d6units",
+			"13d6units",
+			"14d6units",
+			"15d6units",
+			"16d6units",
+			"killmon",
+			"kill2d6mon",
+			"killcom",
+			"transform",
+			"fireboost",
+			"airboost",
+			"waterboost",
+			"earthboost",
+			"astralboost",
+			"deathboost",
+			"natureboost",
+			"bloodboost",
+			"holyboost",
+			"pathboost");
 
-	public static final List<String> NAMETYPE_CMDS = Lists.newArrayList(
+	public static final Set<String> NAMETYPE_CMDS = Sets.newHashSet(
 			"nametype", 
 			"selectnametype");
 
-	public static final List<String> SPELL_CMDS = Lists.newArrayList(
+	public static final Set<String> SPELL_CMDS = Sets.newHashSet(
 			"enchrebate50", 
 			"enchrebate25p", 
 			"enchrebate50p",
@@ -176,35 +229,51 @@ public class StaticTables {
 			"spell", 
 			"autospell");
 
-	public static final List<String> ITEM_CMDS = Lists.newArrayList(
+	public static final Set<String> ITEM_CMDS = Sets.newHashSet(
 			"startitem", 
 			"selectitem", 
 			"newitem", 
 			"copyitem",
-			"item");
+			"item",
+			"req_targitem",
+			"req_targnoitem");
 
-	public static final List<String> SITE_CMDS = Lists.newArrayList(
+	public static final Set<String> SITE_CMDS = Sets.newHashSet(
 			"onlyatsite", 
 			"selectsite", 
 			"newsite", 
 			"startsite",
-			"islandsite");
+			"islandsite",
+			"req_nositenbr",
+			"addsite",
+			"removesite",
+			"hiddensite");
 
-	public static final List<String> NATION_CMDS = Lists.newArrayList(
+	public static final Set<String> NATION_CMDS = Sets.newHashSet(
 			"restricted", 
 			"notfornation", 
 			"nationrebate",
 			"nat", 
 			"selectnation", 
-			"newnation");
+			"newnation",
+			"req_nation",
+			"req_nonation",
+			"req_fornation",
+			"req_notfornation",
+			"req_notforally",
+			"req_fullowner",
+			"req_domowner",
+			"req_targowner",
+			"nation"
+			);
 
-	public static final List<String> MERCENARY_CMDS = Lists.newArrayList(
+	public static final Set<String> MERCENARY_CMDS = Sets.newHashSet(
 			"newmerc");
 
-	public static final List<String> POPTYPE_CMDS = Lists.newArrayList(
+	public static final Set<String> POPTYPE_CMDS = Sets.newHashSet(
 			"selectpoptype");
 
-	public static final List<String> EVENT_CMDS = Lists.newArrayList(
+	public static final Set<String> EVENT_CMDS = Sets.newHashSet(
 			"newevent");
 	//@formatter:on
 

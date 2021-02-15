@@ -34,10 +34,12 @@ public class InspectorData {
 	public static class Item {
 		public final int id;
 		public final String name;
+		public final Map<String, String> data;
 		
-		public Item(int id, String name) {
-			this.id = id;
-			this.name = name;
+		public Item(Map<String, String> data) {
+			this.data = data;
+			this.id = Integer.parseInt(data.get("id"));
+			this.name = data.get("name").toLowerCase();
 		}
 	}
 	
@@ -53,16 +55,21 @@ public class InspectorData {
 		try {
 			InputStream is = InspectorData.class.getClassLoader().getResourceAsStream("inspector/" + fName);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			
+
 			String line = reader.readLine();
+			String[] column = line.split("\t");
+			line = reader.readLine();
 			while (line != null) {
-				try {
-					line = reader.readLine();
-					String[] parts = line.split("\t");
-					int id = Integer.parseInt(parts[0]);
-					String name = parts[1];
-					result.add(new Item(id, name.toLowerCase()));
-				} catch (Exception e) {}
+				String[] parts = line.split("\t");
+				if(parts.length > column.length) {
+					continue;
+				}
+				Map<String, String> data = Maps.newHashMap();
+				for(int i = 0; i < parts.length; i++) {
+					data.put(column[i], parts[i]);
+				}
+				result.add(new Item(data));
+				line = reader.readLine();
 			}
 		} catch (IOException e) {
 			System.err.println("ERROR LOADING STATIC DATA FROM " + fName);

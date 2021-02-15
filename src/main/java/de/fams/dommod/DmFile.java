@@ -12,20 +12,12 @@ public class DmFile {
 	public final List<Command> commands;
 	public final String tailComment;
 	public final List<Command> outsideCommands = Lists.newArrayList();
-
-	private List<Definition> definitions = null;
+	public  List<Definition> definitions = null;
 
 	public DmFile(List<Command> commands, String tailComment) {
 		this.commands = commands;
 		this.tailComment = tailComment;
  	}
-
-	public List<Definition> getDefinitions() {
-		if (definitions == null) {
-			rebuildDefinitions();
-		}
-		return definitions;
-	}
 
 	@Override
 	public String toString() {

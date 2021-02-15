@@ -22,9 +22,9 @@ public class Info implements Task {
         }
         System.out.println("");
         print("Commands", Integer.toString(mod.commands.size()));
-        print("All Definitions", Integer.toString(mod.getDefinitions().size()));
+        print("All Definitions", Integer.toString(mod.definitions.size()));
         for (EntityType type : EntityType.values()) {
-            List<Definition> defOfType = mod.getDefinitions().stream().filter(d -> d.getType() == type).collect(Collectors.toList());
+            List<Definition> defOfType = mod.definitions.stream().filter(d -> d.getType() == type).collect(Collectors.toList());
             if (!defOfType.isEmpty()) {
                 print(WordUtils.capitalizeFully(type.toString()), Integer.toString(defOfType.size()));
             }
