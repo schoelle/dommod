@@ -1,20 +1,12 @@
 package de.fams.dommod;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
-
 import de.fams.dommod.Parser.ParsingException;
 import de.fams.dommod.tasks.Task;
 import de.fams.dommod.tasks.TaskRegistry;
+
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
 

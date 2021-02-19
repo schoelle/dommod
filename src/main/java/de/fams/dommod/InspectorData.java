@@ -1,14 +1,14 @@
 package de.fams.dommod;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Data extracted from Dom 5 Inspector CSV files
@@ -32,11 +32,13 @@ public class InspectorData {
 	private static final Map<EntityType, List<Item>> itemTable = Maps.newHashMap();
 	
 	public static class Item {
+		public final EntityType type;
 		public final int id;
 		public final String name;
 		public final Map<String, String> data;
-		
-		public Item(Map<String, String> data) {
+
+		public Item(EntityType type, Map<String, String> data) {
+			this.type = type;
 			this.data = data;
 			this.id = Integer.parseInt(data.get("id"));
 			this.name = data.get("name").toLowerCase();
@@ -47,10 +49,10 @@ public class InspectorData {
 		if (!CSV_FILES.containsKey(type)) {
 			return Lists.newArrayList();
 		}
-		return itemTable.computeIfAbsent(type, s -> readFile(CSV_FILES.get(s)));
+		return itemTable.computeIfAbsent(type, s -> readFile(type, CSV_FILES.get(s)));
 	}
 	
-	public static List<Item> readFile(String fName) {
+	public static List<Item> readFile(EntityType type, String fName) {
 		List<Item> result = Lists.newArrayList();
 		try {
 			InputStream is = InspectorData.class.getClassLoader().getResourceAsStream("inspector/" + fName);
@@ -68,7 +70,7 @@ public class InspectorData {
 				for(int i = 0; i < parts.length; i++) {
 					data.put(column[i], parts[i]);
 				}
-				result.add(new Item(data));
+				result.add(new Item(type, data));
 				line = reader.readLine();
 			}
 		} catch (IOException e) {

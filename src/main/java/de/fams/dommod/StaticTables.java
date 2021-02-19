@@ -1,12 +1,10 @@
 package de.fams.dommod;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import java.util.Map;
+import java.util.Set;
 
 import static de.fams.dommod.EntityType.*;
 

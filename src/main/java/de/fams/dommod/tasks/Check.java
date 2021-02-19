@@ -1,19 +1,11 @@
 package de.fams.dommod.tasks;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import de.fams.dommod.*;
 
-import de.fams.dommod.Command;
-import de.fams.dommod.Definition;
-import de.fams.dommod.DmFile;
-import de.fams.dommod.RefStatus;
-import de.fams.dommod.Reference;
+import java.util.List;
+import java.util.Map;
 
 public class Check implements Task {
 
@@ -61,7 +53,7 @@ public class Check implements Task {
 			}	
 		}
 		for (Command cmd: mod.commands) {
-			Reference ref = cmd.reference();
+			ReferenceCommand ref = cmd.getReferenceCommand();
 			if (ref != null) {
 				RefStatus status = ref.status();
 				if (status.isBad()) {

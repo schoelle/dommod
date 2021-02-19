@@ -1,8 +1,11 @@
 package de.fams.dommod;
 
 import com.google.common.base.Preconditions;
+import org.checkerframework.checker.nullness.Opt;
 
+import java.sql.Ref;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A single instruction (#keyword) in a .dm file
@@ -43,7 +46,15 @@ public class Command {
 		this.definition = definition;
 	}
 
-	public Reference reference() {
+	public ReferenceCommand getReferenceCommand() {
+		Reference ref = getReference();
+		if (ref == null) {
+			return null;
+		}
+		return new ReferenceCommand(ref, dmFile, this);
+	}
+
+	public Reference getReference() {
 		EntityType type = StaticTables.REFTYPE_BY_NAME.get(name);
 		if (type == null) {
 			return null;
@@ -51,8 +62,13 @@ public class Command {
 		if (arguments.isEmpty()) {
 			return null;
 		}
-		return new Reference(type, dmFile, this, arguments.get(0));
+		Argument arg = arguments.get(0);
+		if (arg.type == Argument.Type.NUMBER) {
+			return new NumericReference(type, Integer.parseInt(arg.value));
+		}
+		return new StringReference(type, arg.value);
 	}
+
 
 	@Override
 	public String toString() {
@@ -63,6 +79,21 @@ public class Command {
 		if (name == null) {
 			return false;
 		}
-		return this.name.toLowerCase().equals(name.toLowerCase());
+		return this.name.equalsIgnoreCase(name);
+	}
+
+	public Optional<Integer> getNumeric() {
+		if (arguments.isEmpty()) {
+			return Optional.empty();
+		}
+		Argument arg = arguments.get(0);
+		if (arg.type == Argument.Type.STRING) {
+			return Optional.empty();
+		}
+		try {
+			return Optional.of( Integer.parseInt(arg.value));
+		} catch (NumberFormatException e) {
+			return Optional.empty();
+		}
 	}
 }

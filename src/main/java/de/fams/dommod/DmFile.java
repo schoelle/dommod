@@ -1,11 +1,11 @@
 package de.fams.dommod;
 
+import com.google.common.collect.Lists;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Lists;
 
 public class DmFile {
 	

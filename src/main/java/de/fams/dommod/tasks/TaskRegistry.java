@@ -1,8 +1,8 @@
 package de.fams.dommod.tasks;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 public class TaskRegistry {
 

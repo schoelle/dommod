@@ -2,15 +2,10 @@ package de.fams.dommod.tasks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
-import com.google.common.collect.Sets;
 import de.fams.dommod.*;
 
-import javax.sql.CommonDataSource;
-import java.sql.Ref;
 import java.util.List;
-import java.util.Optional;
 import java.util.Queue;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SliceNation implements Task {
@@ -33,7 +28,7 @@ public class SliceNation implements Task {
         List<Command> commandToRemove = Lists.newArrayList();
         for (Command cmd: mod.commands) {
             if (StaticTables.NATION_CMDS.contains(cmd.name) && !StaticTables.STARTCMD_FOR_NAME.containsKey(cmd.name)) {
-                Reference ref = cmd.reference();
+                ReferenceCommand ref = cmd.getReferenceCommand();
                 if (ref != null && !ref.getTargets().contains(nation)) {
                     commandToRemove.add(cmd);
                 }
@@ -83,7 +78,7 @@ public class SliceNation implements Task {
             Definition def = todo.remove();
             result.add(def);
             for (Command cmd: def.commands) {
-                Reference ref = cmd.reference();
+                ReferenceCommand ref = cmd.getReferenceCommand();
                 if (ref != null) {
                     for (Definition target: ref.getTargets()) {
                         if (!result.contains(target)) {

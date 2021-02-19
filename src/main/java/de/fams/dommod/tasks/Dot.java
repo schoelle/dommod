@@ -1,15 +1,15 @@
 package de.fams.dommod.tasks;
 
+import de.fams.dommod.Definition;
+import de.fams.dommod.DmFile;
+import de.fams.dommod.ReferenceCommand;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
-
-import de.fams.dommod.Definition;
-import de.fams.dommod.DmFile;
-import de.fams.dommod.Reference;
 
 public class Dot implements Task {
 	
@@ -39,7 +39,7 @@ public class Dot implements Task {
 			output.write(String.format("  \"%s\" [label=\"%s\"];\n", nodeName(def), label));
 		}
 		for (Definition def: mod.definitions) {
-			for (Reference ref : def.getReferences()) {
+			for (ReferenceCommand ref : def.getReferences()) {
 				for (Definition target: ref.getTargets()) {
 					if (target != def) {
 						output.write(String.format("  \"%s\" -> \"%s\" [label=\"#%s\"];\n", nodeName(def), nodeName(target), ref.command.name));

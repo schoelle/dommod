@@ -1,12 +1,10 @@
 package de.fams.dommod;
 
+import com.google.common.collect.Lists;
+import de.fams.dommod.Argument.Type;
+
 import java.util.List;
 import java.util.Optional;
-
-import com.google.common.collect.Lists;
-
-import de.fams.dommod.Argument.Type;
-import org.apache.commons.text.WordUtils;
 
 /**
  * Definition of an entity in a .dm file, normally started by '#selectTYPE' or '#newTYPE'
@@ -45,7 +43,7 @@ public class Definition {
 		if (arg.type != Type.NUMBER) {
 			return null;
 		}
-		return new Reference(getType(), cmd.dmFile, commands.get(0), arg);
+		return new NumericReference(getType(), Integer.parseInt(arg.value));
 	}
 
 	public String getName() {
@@ -70,10 +68,10 @@ public class Definition {
 		return getType().word() + "(" + id.get() + "): " + name.trim();
 	}
 
-	public List<Reference> getReferences() {
-		List<Reference> result = Lists.newArrayList();
+	public List<ReferenceCommand> getReferences() {
+		List<ReferenceCommand> result = Lists.newArrayList();
 		for (Command cmd: commands) {
-			Reference ref = cmd.reference();
+			ReferenceCommand ref = cmd.getReferenceCommand();
 			if (ref != null) {
 				result.add(ref);
 			}
