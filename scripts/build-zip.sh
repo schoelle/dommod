@@ -1,8 +1,13 @@
 #!/bin/sh
 
-VERSION=$1
+VERSION=$(grep version ../pom.xml | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
+echo "VERSION: $VERSION"
 
 set -e
+
+pushd ..
+mvn package
+popd
 
 MVNJAR=../target/dommod-$VERSION-jar-with-dependencies.jar
 
@@ -25,5 +30,5 @@ sed -i "s/JARNAME/$JARNAME/g" dommod dommod.bat
 cd $TMPDIR
 zip -r $DIRNAME.zip $DIRNAME
 popd
-mv $TMPDIR/$DIRNAME.zip .
+mv $TMPDIR/$DIRNAME.zip ../target
 

@@ -2,7 +2,6 @@
 
 set -e
 DIR=$(dirname "$0")
-echo $DIR
 JAR="$DIR/JARNAME"
 
 if [ -z $JAVA_HOME ]; then
