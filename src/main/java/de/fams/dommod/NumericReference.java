@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public class NumericReference extends Reference {
 
-    public final int id;
+    private final int id;
 
     public NumericReference(EntityType entityType, int id) {
         super(entityType);
