@@ -17,7 +17,7 @@ public class NumericReference extends Reference {
 
     @Override
     public String toString() {
-        return String.format("%s(%d)", entityType, id);
+        return String.format("%s(%d)", getEntityType(), id);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class NumericReference extends Reference {
                 return false; // monster type reference
             }
         }
-        return id >= entityType.minId && id <= entityType.minModId;
+        return id >= getEntityType().minId && id <= getEntityType().minModId;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class NumericReference extends Reference {
                 return false; // monster type reference
             }
         }
-        return id < entityType.minId || id > entityType.maxId;
+        return id < getEntityType().minId || id > getEntityType().maxId;
     }
 
     @Override

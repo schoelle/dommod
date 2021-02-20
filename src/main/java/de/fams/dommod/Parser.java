@@ -24,7 +24,6 @@ public class Parser {
 		public ParsingException(Exception e) {
 			super(String.format("Line %d on %s: %s", lineNo, fileName.getName(), e.getMessage()));
 		}
-
 	}
 
 	private final File fileName;

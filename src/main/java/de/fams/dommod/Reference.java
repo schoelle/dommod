@@ -7,19 +7,20 @@ import java.util.stream.Collectors;
 
 public abstract class Reference {
 
-    public final EntityType entityType;
+    private final EntityType entityType;
 
     public Reference(EntityType entityType) {
         this.entityType = entityType;
     }
-
     public EntityType getEntityType() {
         return entityType;
     }
 
     public abstract boolean matches(Definition def);
-
     public abstract boolean matches(InspectorData.Item item);
+    public abstract boolean isBuiltIn();
+    public abstract boolean isInvalid();
+    public abstract boolean isById();
 
     @Override
     public boolean equals(Object o) {
@@ -38,9 +39,4 @@ public abstract class Reference {
         return toString().toLowerCase().hashCode();
     }
 
-    public abstract boolean isBuiltIn();
-
-    public abstract boolean isInvalid();
-
-    public abstract boolean isById();
 }

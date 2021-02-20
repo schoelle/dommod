@@ -2,6 +2,7 @@ package de.fams.dommod;
 
 import com.google.common.collect.Lists;
 
+import java.sql.Ref;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -115,5 +116,35 @@ public class DmFile {
 			}
 		}
 		return usageSet;
+	}
+
+    public void rename(NumericReference from, NumericReference to) {
+		for (Command cmd: commands) {
+			Reference ref = cmd.getReference();
+			if (ref != null && ref instanceof NumericReference) {
+				NumericReference numRef = (NumericReference) ref;
+				if (numRef.equals(from)) {
+					cmd.arguments.set(0, new Argument(Argument.Type.NUMBER, Integer.toString(to.getId())));
+				}
+			}
+		}
+    }
+
+    public void renameMonTag(int from, int to) {
+		for (Command cmd: commands) {
+			if (cmd.name.equalsIgnoreCase("montag")) {
+				Optional<Integer> arg = cmd.getNumericArgument();
+				if (arg.isPresent() && arg.get() == from) {
+					cmd.arguments.set(0, new Argument(Argument.Type.NUMBER, Integer.toString(to)));
+				}
+			}
+			Reference ref = cmd.getReference();
+			if (ref != null && ref instanceof NumericReference) {
+				NumericReference numRef = (NumericReference) ref;
+				if (numRef.getEntityType() == EntityType.MONSTER && numRef.getId() == -from) {
+					cmd.arguments.set(0, new Argument(Argument.Type.NUMBER, Integer.toString(-to)));
+				}
+			}
+		}
 	}
 }

@@ -13,12 +13,12 @@ public class UsageSet {
     private final Set<Integer> montagUsage = Sets.newHashSet();
 
     public void add(NumericReference ref) {
-        Set<Integer> idSet = idUsage.computeIfAbsent(ref.entityType, x -> Sets.newHashSet());
+        Set<Integer> idSet = idUsage.computeIfAbsent(ref.getEntityType(), x -> Sets.newHashSet());
         idSet.add(ref.getId());
     }
 
     public boolean has(NumericReference ref) {
-        Set<Integer> ids = idUsage.get(ref.entityType);
+        Set<Integer> ids = idUsage.get(ref.getEntityType());
         if (ids != null) {
             return ids.contains(ref.getId());
         }
@@ -71,5 +71,9 @@ public class UsageSet {
 
     public Set<Integer> getMontagUsage() {
         return montagUsage;
+    }
+
+    public int size() {
+        return getReferences().size();
     }
 }

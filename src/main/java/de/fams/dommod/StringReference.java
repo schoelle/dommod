@@ -15,7 +15,7 @@ public class StringReference extends Reference {
 
     @Override
     public String toString() {
-        return String.format("%s(\"%s\")", entityType, name);
+        return String.format("%s(\"%s\")", getEntityType(), name);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class StringReference extends Reference {
 
     @Override
     public boolean isBuiltIn() {
-        return InspectorData.getBuiltIn(entityType).stream().anyMatch(i -> matches(i));
+        return InspectorData.getBuiltIn(getEntityType()).stream().anyMatch(i -> matches(i));
     }
 
     @Override
