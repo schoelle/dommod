@@ -1,9 +1,7 @@
 package de.fams.dommod;
 
 import com.google.common.collect.Lists;
-import de.fams.dommod.Argument.Type;
 
-import java.sql.Ref;
 import java.util.List;
 import java.util.stream.Collectors;
 

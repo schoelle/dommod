@@ -26,7 +26,7 @@ public class SliceNation implements Task {
             return;
         }
         List<Command> commandToRemove = Lists.newArrayList();
-        for (Command cmd: mod.commands) {
+        for (Command cmd : mod.commands) {
             if (StaticTables.NATION_CMDS.contains(cmd.name) && !StaticTables.STARTCMD_FOR_NAME.containsKey(cmd.name)) {
                 ReferenceCommand ref = cmd.getReferenceCommand();
                 if (ref != null && !ref.getTargets().contains(nation)) {
@@ -39,7 +39,7 @@ public class SliceNation implements Task {
         String nationName = nation.getName();
         System.out.println(String.format("Extracting nation %d: %s", nation.getId().get(), nationName));
         List<Definition> spells = findSpells(nationId, nationName);
-        for (Definition spell: spells) {
+        for (Definition spell : spells) {
             System.out.println(String.format("National %s", spell.toString()));
         }
         List<Definition> required = Lists.newArrayList();
@@ -49,7 +49,7 @@ public class SliceNation implements Task {
         List<Definition> needed = dfs(required);
         List<Definition> notNeeded = mod.definitions.stream().filter(d -> !needed.contains(d)).collect(Collectors.toList());
         commandToRemove.clear();
-        for (Definition def: notNeeded) {
+        for (Definition def : notNeeded) {
             System.out.println("Removing: " + def.toString());
             commandToRemove.addAll(def.commands);
         }
@@ -58,7 +58,7 @@ public class SliceNation implements Task {
             commandToRemove.add(cmd);
         }
         mod.removeCommands(commandToRemove);
-        for (Definition n: mod.definitions) {
+        for (Definition n : mod.definitions) {
             System.out.println("Keeping: " + n.toString());
         }
 
@@ -77,10 +77,10 @@ public class SliceNation implements Task {
         while (!todo.isEmpty()) {
             Definition def = todo.remove();
             result.add(def);
-            for (Command cmd: def.commands) {
+            for (Command cmd : def.commands) {
                 ReferenceCommand ref = cmd.getReferenceCommand();
                 if (ref != null) {
-                    for (Definition target: ref.getTargets()) {
+                    for (Definition target : ref.getTargets()) {
                         if (!result.contains(target)) {
                             todo.add(target);
                         }
@@ -93,20 +93,20 @@ public class SliceNation implements Task {
 
     private List<Definition> findSpells(int nationId, String nationName) {
         return mod.definitions.stream().filter(d -> {
-                    if (d.getType() != EntityType.SPELL) {
-                        return false;
-                    }
-                    Command restricted = d.commands.stream().filter(c -> c.hasName("restricted")).findAny().orElse(null);
-                    if (restricted == null || restricted.arguments.isEmpty()) {
-                        return false;
-                    }
-                    Argument arg = restricted.arguments.get(0);
-                    if (arg.type == Argument.Type.NUMBER) {
-                        return Integer.valueOf(arg.value) == nationId;
-                    } else {
-                        return nameMatch(arg.value, nationName);
-                    }
-                }).collect(Collectors.toList());
+            if (d.getType() != EntityType.SPELL) {
+                return false;
+            }
+            Command restricted = d.commands.stream().filter(c -> c.hasName("restricted")).findAny().orElse(null);
+            if (restricted == null || restricted.arguments.isEmpty()) {
+                return false;
+            }
+            Argument arg = restricted.arguments.get(0);
+            if (arg.type == Argument.Type.NUMBER) {
+                return Integer.valueOf(arg.value) == nationId;
+            } else {
+                return nameMatch(arg.value, nationName);
+            }
+        }).collect(Collectors.toList());
     }
 
     private boolean nameMatch(String a, String b) {

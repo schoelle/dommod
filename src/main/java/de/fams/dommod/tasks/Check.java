@@ -4,10 +4,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.fams.dommod.*;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class Check implements Task {
+public class Check extends OutputFileTask {
 
 	@Override
 	public String description() {
@@ -18,22 +20,18 @@ public class Check implements Task {
 	public List<String> errors = Lists.newArrayList();
 
 	@Override
-	public void process(DmFile mod, List<String> arguments) {
-		if (!arguments.isEmpty()) {
-			System.out.println("check does not take any arguments");
-			return;
-		}
+	public void doOutput(DmFile mod, BufferedWriter writer) throws IOException {
 		check(mod);
 		if (warnings.isEmpty() && errors.isEmpty()) {
-			System.out.println("Everything look ok.");
+			writer.write("Everything look ok.\n");
 		} else {
 			for (String s: warnings) {
-				System.out.println(String.format("  WARNING: %s", s));
+				writer.write(String.format("  WARNING: %s\n", s));
 			}
 			for (String s: errors) {
-				System.out.println(String.format("  ERROR: %s", s));
+				writer.write(String.format("  ERROR: %s\n", s));
 			}
-			System.out.println(String.format("Total of %d errors and %d warnings found.", errors.size(), warnings.size()));
+			writer.write(String.format("Total of %d errors and %d warnings found.\n", errors.size(), warnings.size()));
 		}
 	}
 
@@ -66,5 +64,4 @@ public class Check implements Task {
 			}
 		}
 	}
-	
 }

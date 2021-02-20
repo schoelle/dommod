@@ -6,35 +6,14 @@ import de.fams.dommod.DmFile;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.List;
 
 /**
  * Output the mod as read in
  */
-public class Output implements Task {
+public class Output extends OutputFileTask {
 
     @Override
-    public void process(DmFile mod, List<String> arguments) {
-        BufferedWriter output;
-        try {
-            if (arguments.size() > 1) {
-                System.out.println("output takes only zero or one argument (the output file name)");
-                return;
-            } if (arguments.isEmpty()) {
-                output = new BufferedWriter(new OutputStreamWriter(System.out));
-            } else {
-                output = new BufferedWriter(new PrintWriter(arguments.get(0)));
-            }
-            writeOutput(mod, output);
-            output.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeOutput(DmFile mod, BufferedWriter output) throws IOException {
+    public void doOutput(DmFile mod, BufferedWriter output) throws IOException {
         for (Command cmd : mod.commands) {
             if (cmd.prefixComment != null) {
                 output.write(cmd.prefixComment);

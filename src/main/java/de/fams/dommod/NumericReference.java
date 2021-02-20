@@ -26,7 +26,7 @@ public class NumericReference extends Reference {
         if (defType != getEntityType()) {
             return false;
         }
-        if (id < -1000) {
+        if (id <= -1000 && id >= -100000) {
             // Look for montag
             for (Command cmd : def.commands) {
                 if (cmd.name.equals("montag")) {

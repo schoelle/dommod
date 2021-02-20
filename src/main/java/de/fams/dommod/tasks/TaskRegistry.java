@@ -16,5 +16,6 @@ public class TaskRegistry {
 		TASK_TABLE.put("info", new Info());
 		TASK_TABLE.put("slicenation", new SliceNation());
 		TASK_TABLE.put("withouthats", new WithoutHats());
+		TASK_TABLE.put("usedids", new UsedIds());
 	}
 }

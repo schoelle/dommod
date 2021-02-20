@@ -1,9 +1,5 @@
 package de.fams.dommod;
 
-import java.sql.Ref;
-import java.util.Locale;
-import java.util.Objects;
-
 public abstract class Reference {
 
     public final EntityType entityType;

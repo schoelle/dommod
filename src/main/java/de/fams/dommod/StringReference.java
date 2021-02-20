@@ -1,7 +1,5 @@
 package de.fams.dommod;
 
-import java.util.Objects;
-
 public class StringReference extends Reference {
 
     public final String name;
