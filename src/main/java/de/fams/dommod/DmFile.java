@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DmFile {
@@ -97,4 +98,22 @@ public class DmFile {
 		rebuildDefinitions();
 	}
 
+	public UsageSet getUsage() {
+		UsageSet usageSet = new UsageSet();
+		for (Definition def : definitions) {
+			NumericReference ref = def.getSelfReference();
+			if (ref != null) {
+				usageSet.add(ref);
+			}
+		}
+		for (Command cmd : commands) {
+			if (cmd.name.equalsIgnoreCase("montag")) {
+				Optional<Integer> id = cmd.getNumericArgument();
+				if (id.isPresent()) {
+					usageSet.addMontag(id.get());
+				}
+			}
+		}
+		return usageSet;
+	}
 }

@@ -80,7 +80,7 @@ public class Command {
 		return this.name.equalsIgnoreCase(name);
 	}
 
-	public Optional<Integer> getNumeric() {
+	public Optional<Integer> getNumericArgument() {
 		if (arguments.isEmpty()) {
 			return Optional.empty();
 		}
@@ -89,7 +89,7 @@ public class Command {
 			return Optional.empty();
 		}
 		try {
-			return Optional.of( Integer.parseInt(arg.value));
+			return Optional.of(Integer.parseInt(arg.value));
 		} catch (NumberFormatException e) {
 			return Optional.empty();
 		}

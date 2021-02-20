@@ -1,5 +1,10 @@
 package de.fams.dommod;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public abstract class Reference {
 
     public final EntityType entityType;
@@ -13,6 +18,7 @@ public abstract class Reference {
     }
 
     public abstract boolean matches(Definition def);
+
     public abstract boolean matches(InspectorData.Item item);
 
     @Override
@@ -23,12 +29,18 @@ public abstract class Reference {
         return o.toString().equalsIgnoreCase(toString());
     }
 
+    public List<Definition> findIn(DmFile mod) {
+        return mod.definitions.stream().filter(this::matches).collect(Collectors.toList());
+    }
+
     @Override
     public int hashCode() {
         return toString().toLowerCase().hashCode();
     }
 
     public abstract boolean isBuiltIn();
+
     public abstract boolean isInvalid();
+
     public abstract boolean isById();
 }

@@ -30,7 +30,7 @@ public class NumericReference extends Reference {
             // Look for montag
             for (Command cmd : def.commands) {
                 if (cmd.name.equals("montag")) {
-                    Optional<Integer> numarg = cmd.getNumeric();
+                    Optional<Integer> numarg = cmd.getNumericArgument();
                     if (numarg.isEmpty()) {
                         continue;
                     }

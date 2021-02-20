@@ -34,16 +34,12 @@ public class Definition {
 		return Optional.empty();
 	}
 
-	public Reference getSelfReference() {
-		Command cmd = commands.get(0);
-		if (cmd.arguments.isEmpty()) {
+	public NumericReference getSelfReference() {
+		Optional<Integer> id = getId();
+		if (id.isEmpty()) {
 			return null;
 		}
-		Argument arg = cmd.arguments.get(0);
-		if (arg.type != Type.NUMBER) {
-			return null;
-		}
-		return new NumericReference(getType(), Integer.parseInt(arg.value));
+		return new NumericReference(getType(), getId().get());
 	}
 
 	public String getName() {
