@@ -60,7 +60,12 @@ public class NumericReference extends Reference {
     public boolean isBuiltIn() {
         if (getEntityType() == EntityType.MONSTER) {
             if (id >= -18 && id <= -2) {
-                return false; // monster type reference
+                return true; // monster type reference
+            }
+        }
+        if (getEntityType() == EntityType.NATION) {
+            if (id >= -2 && id <= -1) {
+                return true; // random or province owner
             }
         }
         return id >= getEntityType().minId && id <= getEntityType().minModId;
@@ -74,6 +79,11 @@ public class NumericReference extends Reference {
             }
             if (id >= -18 && id <= -2) {
                 return false; // monster type reference
+            }
+        }
+        if (getEntityType() == EntityType.NATION) {
+            if (id >= -2 && id <= -1) {
+                return false; // random or province owner
             }
         }
         return id < getEntityType().minId || id > getEntityType().maxId;

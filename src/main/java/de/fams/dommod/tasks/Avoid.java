@@ -66,6 +66,6 @@ public class Avoid implements Task {
 
     @Override
     public String description() {
-        return null;
+        return "Rename all numeric references in the input mod to avoid the reference in the id file";
     }
 }
