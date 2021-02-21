@@ -43,6 +43,10 @@ public class Avoid implements Task {
         Set<Integer> bothIds = Sets.intersection(usedIds.getMontagUsage(), avoidIds.getMontagUsage());
         int newId = 1000;
         for (int id : bothIds) {
+            if (id < 1000) {
+                // Built-in
+                continue;
+            }
             while (allIds.contains(newId)) newId++;
             allIds.add(newId);
             result.put(id, newId);
@@ -57,6 +61,9 @@ public class Avoid implements Task {
         avoidIds.getReferences().forEach(allIds::add);
         UsageSet bothIds = usedIds.intersected(avoidIds);
         for (NumericReference id : bothIds.getReferences()) {
+            if (id.isBuiltIn()) {
+                continue;
+            }
             NumericReference newId = allIds.findUnused(id.getEntityType());
             allIds.add(newId);
             result.put(id, newId);
