@@ -13,6 +13,9 @@ public class UsedIds extends OutputFileTask {
         UsageSet usage = mod.getUsage();
         for (NumericReference ref : usage.getReferences()) {
             List<Definition> def = ref.findIn(mod);
+            if (ref.isBuiltIn()) {
+                continue;
+            }
             if (def.size() == 1 && def.get(0).getName() != null) {
                 writer.write(String.format("%s -- %s\n", ref, def.get(0).getName()));
             } else {
